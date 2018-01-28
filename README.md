@@ -15,6 +15,7 @@ The script supports the following Ubuntu editions out of the box:
 * Ubuntu 12.04 Server LTS amd64 - Precise Pangolin
 * Ubuntu 14.04 Server LTS amd64 - Trusty Tahr
 * Ubuntu 16.04 Server LTS amd64 - Xenial Xerus
+* Ubuntu 17.10 Server LTS amd64 - Artful Aardvark
 
 Script automatically chooses the latest current image by parsing http://releases.ubuntu.com page.
 
@@ -23,7 +24,11 @@ This script has been tested on and with these three versions as well, but I see 
 ## Usage
 
 * From your command line, run the following commands:
-
+```
+$ git clone https://github.com/jscott1971/ubuntu-unattended.git
+$ sudo ./create-unattended-iso.sh
+```
+or
 ```
 $ wget https://raw.githubusercontent.com/netson/ubuntu-unattended/master/create-unattended-iso.sh
 $ chmod +x create-unattended-iso.sh
@@ -42,8 +47,9 @@ $ sudo ./create-unattended-iso.sh
   [1] Ubuntu 12.04.4 LTS Server amd64 - Precise Pangolin
   [2] Ubuntu 14.04.2 LTS Server amd64 - Trusty Tahr
   [3] Ubuntu 16.04.1 Server LTS amd64 - Xenial Xerus
+  [4] Ubuntu 17.10.1 Server amd64 - Artful Aardvark
 
- please enter your preference: [1|2|3]:
+ please enter your preference: [1|2|3|4]:
 ```
 
 * Enter your desired timezone; the default is *Europe/Amsterdam*:
@@ -52,10 +58,15 @@ $ sudo ./create-unattended-iso.sh
  please enter your preferred timezone: Europe/Amsterdam
 ```
 
-* Enter your desired username; the default is *netson*:
+* Enter your preferred hostname; the default is *ubuntu*
+...
+ please enter your preferred hostname: ubuntu
+...
+
+* Enter your desired username; the default is <login_name>:
 
 ```
- please enter your preferred username: netson
+ please enter your preferred username: user
 ```
 
 * Enter the password for your user account; the default is *empty*
@@ -101,7 +112,7 @@ This script does a bunch of stuff, here's the quick walk-through:
  -----
  finished remastering your ubuntu iso file
  the new file is located at: /tmp/ubuntu-14.04.2-server-amd64-unattended.iso
- your username is: netson
+ your username is: <login_name>
  your password is: 
  your hostname is: ubuntu
  your timezone is: Europe/Amsterdam
