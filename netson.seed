@@ -1,8 +1,7 @@
-# regional setting
+# Localization
 d-i debian-installer/language                               string      en_US:en
 d-i debian-installer/country                                string      US
 d-i debian-installer/locale                                 string      en_US
-d-i debian-installer/splash                                 boolean     false
 d-i localechooser/supported-locales                         multiselect en_US.UTF-8
 d-i pkgsel/install-language-support                         boolean     true
 
@@ -24,12 +23,14 @@ d-i netcfg/get_domain                                       string      {{hostna
 d-i mirror/country                                          string      manual
 d-i mirror/http/hostname                                    string      archive.ubuntu.com
 d-i mirror/http/directory                                   string      /ubuntu
+d-i mirror/http/mirror                                      select      us.archive.ubuntu.com
 d-i mirror/http/proxy                                       string
 
 # clock and timezone settings
 d-i time/zone                                               string      {{timezone}}
-d-i clock-setup/utc                                         boolean     false
+d-i clock-setup/utc                                         boolean     true
 d-i clock-setup/ntp                                         boolean     true
+d-i clock-setup/ntp-server                                  string      192.168.1.1
 
 # user account setup
 d-i passwd/root-login                                       boolean     false
@@ -50,35 +51,47 @@ d-i apt-setup/services-select                               multiselect security
 d-i apt-setup/security_host                                 string      security.ubuntu.com
 d-i apt-setup/security_path                                 string      /ubuntu
 tasksel tasksel/first                                       multiselect Basic Ubuntu server
-d-i pkgsel/include                                          string      openssh-server
-d-i pkgsel/upgrade                                          select      safe-upgrade
+d-i pkgsel/include                                          string      openssh-server 
+d-i pkgsel/upgrade                                          select      none
 d-i pkgsel/update-policy                                    select      none
 d-i pkgsel/updatedb                                         boolean     true
 
 # disk partitioning
-d-i partman/confirm_write_new_label                         boolean     true
 d-i partman/choose_partition                                select      finish
-d-i partman/confirm_nooverwrite                             boolean     true
 d-i partman/confirm                                         boolean     true
+d-i partman/confirm_write_new_label                         boolean     true
+d-i partman/confirm_nooverwrite                             boolean     true
+d-i partman/default_filesystem                              string      ext4
+d-i partman/mount_style                                     select      uuid
+d-i partman-auto-lvm/guided_size                            string      max
+d-i partman-auto-lvm/no_boot                                boolean     true
+d-i partman-auto/choose_recipe                              select      atomic
+d-i partman-auto/method                                     string      regular
 d-i partman-auto/purge_lvm_from_device                      boolean     true
-d-i partman-lvm/device_remove_lvm                           boolean     true
 d-i partman-lvm/confirm                                     boolean     true
 d-i partman-lvm/confirm_nooverwrite                         boolean     true
-d-i partman-auto-lvm/no_boot                                boolean     true
-d-i partman-md/device_remove_md                             boolean     true
+d-i partman-lvm/device_remove_lvm                           boolean     true
 d-i partman-md/confirm                                      boolean     true
 d-i partman-md/confirm_nooverwrite                          boolean     true
-d-i partman-auto/method                                     string      lvm
-d-i partman-auto-lvm/guided_size                            string      max
+d-i partman-md/device_remove_md                             boolean     true
 d-i partman-partitioning/confirm_write_new_label            boolean     true
 
-# grub boot loader
+# GRUB configuration, disable splash and quiet to reduce error in graphics drivers of virtual machines
+d-i debian-installer/quiet                                  boolean     false
+d-i debian-installer/splash                                 boolean     false
 d-i grub-installer/only_debian                              boolean     true
 d-i grub-installer/with_other_os                            boolean     true
+d-i grub-installer/timeout                                  string      10
+
+# Due notably to potential USB sticks, the location of the MBR can not be
+# # determined safely in general, so this needs to be specified:
+d-i grub-installer/bootdev                                  string      /dev/sda
+# # To install to the first device (assuming it is not a USB stick):
+d-i grub-installer/bootdev                                  string      default
 
 # finish installation
 d-i finish-install/reboot_in_progress                       note
-d-i finish-install/keep-consoles                            boolean     false
 d-i cdrom-detect/eject                                      boolean     true
+d-i finish-install/keep-consoles                            boolean     false
 d-i debian-installer/exit/halt                              boolean     false
 d-i debian-installer/exit/poweroff                          boolean     false
