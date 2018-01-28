@@ -120,9 +120,9 @@ This script does a bunch of stuff, here's the quick walk-through:
 
 ### Once Ubuntu is installed ...
 
-Just fire off the start.sh script in your users' home directory to complete the installation. This will ask you if you would like to add the puppetlabs repositories for puppet and its dependencies and if you would also like to setup the puppet agent
+Just fire off the init.sh script in your users' home directory to complete the installation. This will ask you if you would like to add the puppetlabs repositories for puppet and its dependencies and if you would also like to setup the puppet agent
 
-```$ sudo ~/start.sh``` 
+```$ sudo ~/init.sh``` 
 
 ### That's it, enjoy! :)
 
