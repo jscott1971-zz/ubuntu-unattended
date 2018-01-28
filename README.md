@@ -30,7 +30,7 @@ $ sudo ./create-unattended-iso.sh
 ```
 or
 ```
-$ wget https://raw.githubusercontent.com/netson/ubuntu-unattended/master/create-unattended-iso.sh
+$ wget https://raw.githubusercontent.com/jscott1971/ubuntu-unattended/master/create-unattended-iso.sh
 $ chmod +x create-unattended-iso.sh
 $ sudo ./create-unattended-iso.sh
 ```
