@@ -52,10 +52,10 @@ $ sudo ./create-unattended-iso.sh
  please enter your preference: [1|2|3|4]:
 ```
 
-* Enter your desired timezone; the default is *Europe/Amsterdam*:
+* Enter your desired timezone; the default is *US/Eastern*:
 
 ```
- please enter your preferred timezone: Europe/Amsterdam
+ please enter your preferred timezone: US/Eastern
 ```
 
 * Enter your preferred hostname; the default is *ubuntu*
@@ -115,7 +115,7 @@ This script does a bunch of stuff, here's the quick walk-through:
  your username is: <login_name>
  your password is: 
  your hostname is: ubuntu
- your timezone is: Europe/Amsterdam
+ your timezone is: US/Eastern
 ```
 
 ### Once Ubuntu is installed ...
