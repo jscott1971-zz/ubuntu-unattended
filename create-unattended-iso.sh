@@ -2,7 +2,6 @@
 
 # file names & paths
 tmp="/tmp"  # destination folder to store the final iso file
-hostname="ubuntu"
 currentuser="$( whoami)"
 
 # define spinner function for slow tasks
@@ -122,6 +121,7 @@ fi
 
 # ask the user questions about his/her preferences
 read -ep " please enter your preferred timezone: " -i "${timezone}" timezone
+read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
 read -ep " please enter your preferred username: " -i "netson" username
 read -sp " please enter your preferred password: " password
 printf "\n"
