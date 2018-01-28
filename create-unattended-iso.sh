@@ -95,20 +95,20 @@ while true; do
     read -p " please enter your preference: [1|2|3|4]: " ubver
     case $ubver in
         [1]* )  download_file="ubuntu-$prec-server-amd64.iso"           # filename of the iso to be downloaded
-                download_location="http://releases.ubuntu.com/$prec/"     # location of the file to be downloaded
+                download_location="http://releases.ubuntu.com/$prec/"   # location of the file to be downloaded
                 new_iso_name="ubuntu-$prec-server-amd64-unattended.iso" # filename of the new iso file to be created
                 break;;
-        [2]* )  download_file="ubuntu-$trus-server-amd64.iso"             # filename of the iso to be downloaded
-                download_location="http://releases.ubuntu.com/$trus/"     # location of the file to be downloaded
-                new_iso_name="ubuntu-$trus-server-amd64-unattended.iso"   # filename of the new iso file to be created
+        [2]* )  download_file="ubuntu-$trus-server-amd64.iso"           # filename of the iso to be downloaded
+                download_location="http://releases.ubuntu.com/$trus/"   # location of the file to be downloaded
+                new_iso_name="ubuntu-$trus-server-amd64-unattended.iso" # filename of the new iso file to be created
                 break;;
-        [3]* )  download_file="ubuntu-$xenn-server-amd64.iso"
-                download_location="http://releases.ubuntu.com/$xenn/"
-                new_iso_name="ubuntu-$xenn-server-amd64-unattended.iso"
+        [3]* )  download_file="ubuntu-$xenn-server-amd64.iso"           # filename of the iso to be downloaded
+                download_location="http://releases.ubuntu.com/$xenn/"   # location of the file to be downloaded
+                new_iso_name="ubuntu-$xenn-server-amd64-unattended.iso" # filename of the new iso file to be created
                 break;
-	[4]* )  download_file="ubuntu-$artt-server-amd64.iso"
-                download_location="http://releases.ubuntu.com/$artt/"
-                new_iso_name="ubuntu-$artt-server-amd64-unattended.iso"
+	[4]* )  download_file="ubuntu-$artt-server-amd64.iso"           # filename of the iso to be downloaded
+                download_location="http://releases.ubuntu.com/$artt/"   # location of the file to be downloaded
+                new_iso_name="ubuntu-$artt-server-amd64-unattended.iso" # filename of the new iso file to be created
                 break;;
         * ) echo " please answer [1], [2], [3] or [4]";;
     esac
