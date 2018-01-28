@@ -61,6 +61,8 @@ if [ ${UID} -ne 0 ]; then
     echo
     exit 1
 fi
+
+# ==========================================================================
 #check that we are in ubuntu 16.04
 
 fgrep "16.04" /etc/os-release >/dev/null 2>&1
@@ -83,9 +85,11 @@ xenn=$(fgrep Xenial $tmphtml | head -1 | awk '{print $3}')
 # artt=$(fgrep Artful $tmphtml | head -1 | awk '{print $3}')
 artt="17.10.1"
 
+# ==========================================================================
+
 # ask whether to include vmware tools or not
 while true; do
-    echo " which ubuntu edition would you like to remaster:"
+    echo " Which ubuntu edition would you like to remaster:"
     echo
     echo "  [1] Ubuntu $prec LTS Server amd64 - Precise Pangolin"
     echo "  [2] Ubuntu $trus LTS Server amd64 - Trusty Tahr"
