@@ -2,7 +2,6 @@
 
 # file names & paths
 tmp="/tmp"  # destination folder to store the final iso file
-currentuser="$( whoami)"
 
 # define spinner function for slow tasks
 # courtesy of http://fitnr.com/showing-a-bash-spinner.html
@@ -51,12 +50,13 @@ echo " |            UNATTENDED UBUNTU ISO MAKER            |"
 echo " +---------------------------------------------------+"
 echo
 
-# ask if script runs without sudo or root priveleges
-if [ $currentuser != "root" ]; then
-    echo " you need sudo privileges to run this script, or run it as root"
+# This script must be run with root privileges
+if [ ${UID} -ne 0 ]; then
+    echo " [-] This script must be runned with root privileges."
+    echo " [-] sudo ${0}"
+    echo
     exit 1
 fi
-
 #check that we are in ubuntu 16.04
 
 fgrep "16.04" /etc/os-release >/dev/null 2>&1
