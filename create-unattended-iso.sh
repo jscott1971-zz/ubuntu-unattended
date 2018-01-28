@@ -169,7 +169,13 @@ if [ $(program_is_installed "mkpasswd") -eq 0 ] || [ $(program_is_installed "mki
     spinner $!
     (apt-get -y install whois genisoimage > /dev/null 2>&1) &
     spinner $!
+
+    # thanks to rroethof
+    if [ -f /usr/bin/mkisofs ]; then
+      ls -s /usr/bin/genisoimage /usr/bin/mkisofs
+    fi
 fi
+
 if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
     if [ $(program_is_installed "isohybrid") -eq 0 ]; then
       #16.04
