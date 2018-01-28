@@ -75,8 +75,10 @@ wget -O $tmphtml 'http://releases.ubuntu.com/' >/dev/null 2>&1
 prec=$(fgrep Precise $tmphtml | head -1 | awk '{print $3}')
 trus=$(fgrep Trusty $tmphtml | head -1 | awk '{print $3}')
 xenn=$(fgrep Xenial $tmphtml | head -1 | awk '{print $3}')
-
-
+# Uncomment the following when bug is fixed.
+# https://bugs.launchpad.net/bugs/1745744
+# artt=$(fgrep Artful $tmphtml | head -1 | awk '{print $3}')
+artt="17.10.1"
 
 # ask whether to include vmware tools or not
 while true; do
@@ -85,8 +87,9 @@ while true; do
     echo "  [1] Ubuntu $prec LTS Server amd64 - Precise Pangolin"
     echo "  [2] Ubuntu $trus LTS Server amd64 - Trusty Tahr"
     echo "  [3] Ubuntu $xenn LTS Server amd64 - Xenial Xerus"
+    echo "  [4] Ubuntu $artt LTS server amd64 - Artful Aardvark"
     echo
-    read -p " please enter your preference: [1|2|3]: " ubver
+    read -p " please enter your preference: [1|2|3|4]: " ubver
     case $ubver in
         [1]* )  download_file="ubuntu-$prec-server-amd64.iso"           # filename of the iso to be downloaded
                 download_location="http://releases.ubuntu.com/$prec/"     # location of the file to be downloaded
@@ -99,8 +102,12 @@ while true; do
         [3]* )  download_file="ubuntu-$xenn-server-amd64.iso"
                 download_location="http://releases.ubuntu.com/$xenn/"
                 new_iso_name="ubuntu-$xenn-server-amd64-unattended.iso"
+                break;
+	[4]* )  download_file="ubuntu-$artt-server-amd64.iso"
+                download_location="http://releases.ubuntu.com/$artt/"
+                new_iso_name="ubuntu-$artt-server-amd64-unattended.iso"
                 break;;
-        * ) echo " please answer [1], [2] or [3]";;
+        * ) echo " please answer [1], [2], [3] or [4]";;
     esac
 done
 
