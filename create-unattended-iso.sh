@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # file names & paths
-tmp="$HOME"  # destination folder to store the final iso file
+tmp="/tmp"  # destination folder to store the final iso file
 hostname="ubuntu"
 currentuser="$( whoami)"
 
