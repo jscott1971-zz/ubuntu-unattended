@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # file names & paths
-timezone="US/Eastern"
 tmp="/tmp"  # destination folder to store the final iso file
 tmphtml=$tmp/tmphtml
 
@@ -107,21 +106,26 @@ while true; do
     esac
 done
 
+if ! timezone=`cat /etc/timezone 2> /dev/null`; then
+    timezone="US/Eastern"
+fi
+
 # ask the user questions about his/her preferences
 read -ep " please enter your preferred timezone: " -i "${timezone}" timezone
 read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
 read -ep " please enter your preferred username: " -i "netson" username
-read -sp " please enter your preferred password: " password
-printf "\n"
-read -sp " confirm your preferred password: " password2
-printf "\n"
-
-# check if the passwords match to prevent headaches
-if [[ "$password" != "$password2" ]]; then
-    echo " your passwords do not match; please restart the script and try again"
-    echo
-    exit
-fi
+while true; do
+    read -sp " please enter your preferred password: " password
+    printf "\n"
+    read -sp " confirm your preferred password: " password2
+    printf "\n"
+    if [[ "$password" != "$password2" ]]; then
+        echo " your passwords do not match; please try again"
+	echo
+    else
+        break
+    fi
+done
 
 read -p " autostart installation on boot (y/n)?" choice
 case "$choice" in 
