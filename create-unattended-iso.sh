@@ -114,6 +114,8 @@ fi
 read -ep " please enter your preferred timezone: " -i "${timezone}" timezone
 read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
 read -ep " please enter your preferred username: " -i "`logname`" username
+
+# Check if the passwords match
 while true; do
     read -sp " please enter your preferred password: " password
     printf "\n"
@@ -194,7 +196,6 @@ echo en > $tmp/iso_new/isolinux/lang
 if $autostart ; then
     sed -i "s/timeout 0/timeout 1/" $tmp/iso_new/isolinux/isolinux.cfg
 fi
-exit
 
 # set late command
 late_command="chroot /target wget -O /home/$username/init.sh https://github.com/netson/ubuntu-unattended/raw/master/init.sh ;\
