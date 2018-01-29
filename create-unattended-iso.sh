@@ -154,9 +154,9 @@ read -ep "Please enter partition type (regular_ext4/lvm) : " -i "regular_ext4" p
 
 # ask user with type of partition type to use
 while true; do
-    case ${partiton_type} in
+    case ${partition_type} in
         regular_ext4) seed_file="regular_ext4.seed" ; break ;;
-        * ) echo " please enter only regular_ext4." ;;
+        * ) echo "Please enter only regular_ext4." ;;
     esac
 done
 
