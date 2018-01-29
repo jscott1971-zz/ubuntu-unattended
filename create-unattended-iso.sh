@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # file names & paths
+timezone="US/Eastern"
 tmp="/tmp"  # destination folder to store the final iso file
+tmphtml=$tmp/tmphtml
 
 # define spinner function for slow tasks
 # courtesy of http://fitnr.com/showing-a-bash-spinner.html
@@ -62,18 +64,7 @@ if [ ${UID} -ne 0 ]; then
     exit 1
 fi
 
-# ==========================================================================
-#check that we are in ubuntu 16.04
-
-fgrep "16.04" /etc/os-release >/dev/null 2>&1
-
-if [ $? -eq 0 ]; then
-     ub1604="yes"
-fi
-
-#get the latest versions of Ubuntu LTS
-
-tmphtml=$tmp/tmphtml
+# Get the latest versions of Ubuntu LTS
 rm $tmphtml >/dev/null 2>&1
 wget -O $tmphtml 'http://releases.ubuntu.com/' >/dev/null 2>&1
 
@@ -84,8 +75,6 @@ xenn=$(fgrep Xenial $tmphtml | head -1 | awk '{print $3}')
 # https://bugs.launchpad.net/bugs/1745744
 # artt=$(fgrep Artful $tmphtml | head -1 | awk '{print $3}')
 artt="17.10.1"
-
-# ==========================================================================
 
 # ask whether to include vmware tools or not
 while true; do
@@ -118,15 +107,6 @@ while true; do
     esac
 done
 
-if [ -f /etc/timezone ]; then
-  timezone=`cat /etc/timezone`
-elif [ -h /etc/localtime]; then
-  timezone=`readlink /etc/localtime | sed "s/\/usr\/share\/zoneinfo\///"`
-else
-  checksum=`md5sum /etc/localtime | cut -d' ' -f1`
-  timezone=`find /usr/share/zoneinfo/ -type f -exec md5sum {} \; | grep "^$checksum" | sed "s/.*\/usr\/share\/zoneinfo\///" | head -n 1`
-fi
-
 # ask the user questions about his/her preferences
 read -ep " please enter your preferred timezone: " -i "${timezone}" timezone
 read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
@@ -135,7 +115,6 @@ read -sp " please enter your preferred password: " password
 printf "\n"
 read -sp " confirm your preferred password: " password2
 printf "\n"
-read -ep " Make ISO bootable via USB: " -i "yes" bootable
 
 # check if the passwords match to prevent headaches
 if [[ "$password" != "$password2" ]]; then
@@ -144,19 +123,25 @@ if [[ "$password" != "$password2" ]]; then
     exit
 fi
 
-# download the ubunto iso. If it already exists, do not delete in the end.
+read -p " autostart installation on boot (y/n)?" choice
+case "$choice" in 
+  y|Y ) autostart=true;;
+  * ) autostart=false;;
+esac
+
+# download the ubunto iso.
+# If it already exists, do not delete in the end.
 cd $tmp
 if [[ ! -f $tmp/$download_file ]]; then
     echo -n " downloading $download_file: "
     download "$download_location$download_file"
-fi
-if [[ ! -f $tmp/$download_file ]]; then
-	echo "Error: Failed to download ISO: $download_location$download_file"
-	echo "This file may have moved or may no longer exist."
-	echo
-	echo "You can download it manually and move it to $tmp/$download_file"
-	echo "Then run this script again."
-	exit 1
+elif [[ ! -f $tmp/$download_file ]]; then
+    echo "Error: Failed to download ISO: $download_location$download_file"
+    echo "This file may have moved or may no longer exist."
+    echo
+    echo "You can download it manually and move it to $tmp/$download_file"
+    echo "Then run this script again."
+    exit 1
 fi
 
 # download netson seed file
@@ -180,20 +165,6 @@ if [ $(program_is_installed "mkpasswd") -eq 0 ] || [ $(program_is_installed "mki
     fi
 fi
 
-if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
-    if [ $(program_is_installed "isohybrid") -eq 0 ]; then
-      #16.04
-      if [ $ub1604 == "yes" ]; then
-        (apt-get -y install syslinux syslinux-utils > /dev/null 2>&1) &
-        spinner $!
-      else
-        (apt-get -y install syslinux > /dev/null 2>&1) &
-        spinner $!
-      fi
-    fi
-fi
-
-
 # create working folders
 echo " remastering your iso file"
 mkdir -p $tmp
@@ -213,25 +184,17 @@ spinner $!
 
 # set the language for the installation menu
 cd $tmp/iso_new
-#doesn't work for 16.04
 echo en > $tmp/iso_new/isolinux/lang
 
-#16.04
-#taken from https://github.com/fries/prepare-ubuntu-unattended-install-iso/blob/master/make.sh
-sed -i -r 's/timeout\s+[0-9]+/timeout 1/g' $tmp/iso_new/isolinux/isolinux.cfg
-
+# set timeout to 1 decisecond to skip language & boot menu option selection.
+if $autostart ; then
+    sed -i "s/timeout 0/timeout 1/" $tmp/iso_new/isolinux/isolinux.cfg
+fi
+exit
 
 # set late command
-
-if [ $ub1604 == "yes" ]; then
-   late_command="apt-install wget; in-target wget --no-check-certificate -O /home/$username/init.sh https://github.com/netson/ubuntu-unattended/raw/master/init.sh ;\
-     in-target chmod +x /home/$username/init.sh ;"
-else 
-   late_command="chroot /target wget -O /home/$username/init.sh https://github.com/netson/ubuntu-unattended/raw/master/init.sh ;\
-     chroot /target chmod +x /home/$username/init.sh ;"
-fi
-
-
+late_command="chroot /target wget -O /home/$username/init.sh https://github.com/netson/ubuntu-unattended/raw/master/init.sh ;\
+    chroot /target chmod +x /home/$username/init.sh ;"
 
 # copy the netson seed file to the iso
 cp -rT $tmp/$seed_file $tmp/iso_new/preseed/$seed_file
@@ -263,20 +226,14 @@ sed -i "/label install/ilabel autoinstall\n\
 
 echo " creating the remastered iso"
 cd $tmp/iso_new
-(mkisofs -D -r -V "NETSON_UBUNTU" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
+(mkisofs -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
 spinner $!
-
-# make iso bootable (for dd'ing to  USB stick)
-if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
-    isohybrid $tmp/$new_iso_name
-fi
 
 # cleanup
 umount $tmp/iso_org
 rm -rf $tmp/iso_new
 rm -rf $tmp/iso_org
 rm -rf $tmphtml
-
 
 # print info to user
 echo " -----"
