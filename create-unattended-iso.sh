@@ -77,14 +77,14 @@ artt="17.10.1"
 
 # ask whether to include vmware tools or not
 while true; do
-    echo " Which ubuntu edition would you like to remaster:"
+    echo "Which ubuntu edition would you like to remaster:"
     echo
     echo "  [1] Ubuntu $prec LTS Server amd64 - Precise Pangolin"
     echo "  [2] Ubuntu $trus LTS Server amd64 - Trusty Tahr"
     echo "  [3] Ubuntu $xenn LTS Server amd64 - Xenial Xerus"
     echo "  [4] Ubuntu $artt LTS server amd64 - Artful Aardvark"
     echo
-    read -p " please enter your preference: [1|2|3|4]: " ubver
+    read -p "Please enter your preference: [1|2|3|4]: " ubver
     case $ubver in
         [1]* )  download_file="ubuntu-$prec-server-amd64.iso"           # filename of the iso to be downloaded
                 download_location="http://releases.ubuntu.com/$prec/"   # location of the file to be downloaded
@@ -111,25 +111,25 @@ if ! timezone=`cat /etc/timezone 2> /dev/null`; then
 fi
 
 # ask the user questions about his/her preferences
-read -ep " please enter your preferred timezone: " -i "${timezone}" timezone
-read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
-read -ep " please enter your preferred username: " -i "`logname`" username
+read -ep "Please enter your preferred timezone: " -i "${timezone}" timezone
+read -ep "Please enter your preferred hostname: " -i "ubuntu" hostname
+read -ep "Please enter your preferred username: " -i "`logname`" username
 
 # Check if the passwords match
 while true; do
-    read -sp " please enter your preferred password: " password
+    read -sp "Please enter your preferred password: " password
     printf "\n"
-    read -sp " confirm your preferred password: " password2
+    read -sp "Confirm your preferred password: " password2
     printf "\n"
     if [[ "$password" != "$password2" ]]; then
-        echo " your passwords do not match; please try again"
+        echo "Your passwords do not match; please try again"
 	echo
     else
         break
     fi
 done
 
-read -p " autostart installation on boot (y/n)?" choice
+read -p "Autostart installation on boot(y/n)? " choice
 case "$choice" in 
   y|Y ) autostart=true;;
   * ) autostart=false;;
@@ -150,7 +150,7 @@ elif [[ ! -f $tmp/$download_file ]]; then
     exit 1
 fi
 
-read -ep "Please enter partition type (regular_ext4/lvm) : " -i "expert" partition_type
+read -ep "Please enter partition type (regular_ext4/lvm) : " -i "regular_ext4" partition_type
 
 # ask user with type of partition type to use
 while true; do
