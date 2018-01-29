@@ -150,8 +150,17 @@ elif [[ ! -f $tmp/$download_file ]]; then
     exit 1
 fi
 
+read -ep "Please enter partition type (regular_ext4/lvm) : " -i "expert" partition_type
+
+# ask user with type of partition type to use
+while true; do
+    case ${partiton_type} in
+        regular_ext4) seed_file="regular_ext4.seed" ; break ;;
+        * ) echo " please enter only regular_ext4." ;;
+    esac
+done
+
 # download seed file
-seed_file="netson.seed"
 if [[ ! -f $tmp/$seed_file ]]; then
     echo -n " downloading $seed_file: "
     download "https://raw.githubusercontent.com/jscott1971/ubuntu-unattended/master/$seed_file"
