@@ -89,7 +89,7 @@ This script does a bunch of stuff, here's the quick walk-through:
 
 * It asks you for your preferences regarding the unattended ISO
 * Downloads the appropriate Ubuntu original ISO straight from the Ubuntu servers; if a file with the exact name exists, it will use that instead (so it won't download it more than once if you are creating several unattended ISO's with different defaults)
-* Downloads the netson preseed file; this file contains all the magic answers to auto-install ubuntu. It uses the following defaults for you (only showing most important, for details, simply check the seed file in this repository):
+* Downloads the regular_ext4 preseed file; this file contains all the magic answers to auto-install ubuntu. It uses the following defaults for you (only showing most important, for details, simply check the seed file in this repository):
  * Language/locale: en_US
  * Keyboard layout: US International
  * Root login disabled (so make sure you write down your default usernames' password!)

@@ -207,10 +207,10 @@ if $autostart ; then
 fi
 
 # set late command
-late_command="chroot /target wget -O /home/$username/init.sh https://github.com/netson/ubuntu-unattended/raw/master/init.sh ;\
-    chroot /target chmod +x /home/$username/init.sh ;"
+late_command="chroot /target wget -O /home/$username/start.sh https://github.com/${seed_file}/ubuntu-unattended/raw/master/start.sh ;\
+    chroot /target chmod +x /home/$username/start.sh ;"
 
-# copy the netson seed file to the iso
+# copy the seed file to the iso
 cp -rT $tmp/$seed_file $tmp/iso_new/preseed/$seed_file
 
 # include firstrun script
