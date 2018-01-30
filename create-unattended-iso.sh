@@ -129,6 +129,8 @@ while true; do
     fi
 done
 
+read -ep " Make ISO bootable via USB: " -i "yes" bootable
+
 read -p "Autostart installation on boot(y/n)? " choice
 case "$choice" in 
   y|Y ) autostart=true;;
@@ -177,6 +179,18 @@ if [ $(program_is_installed "mkpasswd") -eq 0 ] || [ $(program_is_installed "mki
     # thanks to rroethof
     if [ -f /usr/bin/mkisofs ]; then
       ln -s /usr/bin/genisoimage /usr/bin/mkisofs
+    fi
+fi
+if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
+    if [ $(program_is_installed "isohybrid") -eq 0 ]; then
+        #16.04
+        if [ $ub1604 == "yes" ]; then
+	    (apt-get -y install syslinux syslinux-utils > /dev/null 2>&1) &
+            spinner $!
+        else
+            (apt-get -y install syslinux > /dev/null 2>&1) &
+            spinner $!
+        fi
     fi
 fi
 
@@ -243,9 +257,14 @@ cd $tmp/iso_new
 (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
 # (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . ) &
 
+
+# make iso bootable (for dd'ing to  USB stick)
+if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
+    isohybrid $tmp/$new_iso_name
+fi
+
 # cleanup
 sleep 15
-exit
 umount $tmp/iso_org
 rm -rf $tmp/iso_new
 rm -rf $tmp/iso_org
