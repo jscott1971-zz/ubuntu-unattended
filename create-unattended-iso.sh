@@ -236,7 +236,7 @@ seed_checksum=$(md5sum $tmp/iso_new/preseed/$seed_file)
 sed -i "/label install/ilabel autoinstall\n\
   menu label ^Unattended Ubuntu Server Install\n\
   kernel /install/vmlinuz\n\
-  append file=/cdrom/preseed/ubuntu-server-minimalvm.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum --" $tmp/iso_new/isolinux/txt.cfg
+  append file=/cdrom/preseed/ubuntu-server-minimal.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum --" $tmp/iso_new/isolinux/txt.cfg
 
 cd $tmp/iso_new
 # (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . ) &
@@ -245,6 +245,7 @@ cd $tmp/iso_new
 
 # cleanup
 sleep 15
+exit
 umount $tmp/iso_org
 rm -rf $tmp/iso_new
 rm -rf $tmp/iso_org
