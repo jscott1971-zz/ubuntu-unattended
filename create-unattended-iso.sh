@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # file names & paths
-tmp="/tmp"  # destination folder to store the final iso file
+tmp="$HOME"  # destination folder to store the final iso file
 tmphtml=$tmp/tmphtml
 
 # define spinner function for slow tasks
@@ -176,7 +176,7 @@ if [ $(program_is_installed "mkpasswd") -eq 0 ] || [ $(program_is_installed "mki
 
     # thanks to rroethof
     if [ -f /usr/bin/mkisofs ]; then
-      ls -s /usr/bin/genisoimage /usr/bin/mkisofs
+      ln -s /usr/bin/genisoimage /usr/bin/mkisofs
     fi
 fi
 
@@ -238,12 +238,13 @@ sed -i "/label install/ilabel autoinstall\n\
   kernel /install/vmlinuz\n\
   append file=/cdrom/preseed/ubuntu-server-minimalvm.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum --" $tmp/iso_new/isolinux/txt.cfg
 
-echo " creating the remastered iso"
 cd $tmp/iso_new
-(mkisofs -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
-spinner $!
+# (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . ) &
+(/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
+# (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . ) &
 
 # cleanup
+sleep 15
 umount $tmp/iso_org
 rm -rf $tmp/iso_new
 rm -rf $tmp/iso_org
