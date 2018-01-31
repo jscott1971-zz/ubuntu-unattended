@@ -251,7 +251,7 @@ seed_checksum=$(md5sum $tmp/iso_new/preseed/$seed_file)
 sed -i "/label install/ilabel autoinstall\n\
   menu label ^Autoinstall Ubuntu Server\n\
   kernel /install/vmlinuz\n\
-  append file=/cdrom/preseed/ubuntu-server.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum --" $tmp/iso_new/isolinux/txt.cfg
+  append file=/cdrom/preseed/ubuntu-server.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum ---" $tmp/iso_new/isolinux/txt.cfg
 
 
 echo " creating the remastered iso"
