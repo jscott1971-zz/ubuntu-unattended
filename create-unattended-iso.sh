@@ -129,7 +129,7 @@ while true; do
     fi
 done
 
-read -ep " Make ISO bootable via USB: " -i "yes" bootable
+read -ep "Make ISO bootable via USB: " -i "yes" bootable
 
 read -p "Autostart installation on boot(y/n)? " choice
 case "$choice" in 
@@ -177,10 +177,11 @@ if [ $(program_is_installed "mkpasswd") -eq 0 ] || [ $(program_is_installed "mki
     spinner $!
 
     # thanks to rroethof
-    if [ -f /usr/bin/mkisofs ]; then
+    if [ ! -f /usr/bin/mkisofs ]; then
       ln -s /usr/bin/genisoimage /usr/bin/mkisofs
     fi
 fi
+
 if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
     if [ $(program_is_installed "isohybrid") -eq 0 ]; then
         #16.04
@@ -248,15 +249,17 @@ seed_checksum=$(md5sum $tmp/iso_new/preseed/$seed_file)
 
 # add the autoinstall option to the menu
 sed -i "/label install/ilabel autoinstall\n\
-  menu label ^Unattended Ubuntu Server Install\n\
+  menu label ^Autoinstall Ubuntu Server\n\
   kernel /install/vmlinuz\n\
-  append file=/cdrom/preseed/ubuntu-server-minimal.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum --" $tmp/iso_new/isolinux/txt.cfg
+  append file=/cdrom/preseed/ubuntu-server.seed initrd=/install/initrd.gz auto=true priority=high preseed/file=/cdrom/preseed/${seed_file} preseed/file/checksum=$seed_checksum --" $tmp/iso_new/isolinux/txt.cfg
 
+
+echo " creating the remastered iso"
 cd $tmp/iso_new
 # (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . ) &
-(/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
+(/usr/bin/genisoimage -D -r -V "Ubuntu unattended server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
 # (/usr/bin/genisoimage -D -r -V "Ubuntu server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . ) &
-
+sleep 15
 
 # make iso bootable (for dd'ing to  USB stick)
 if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
@@ -264,7 +267,6 @@ if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
 fi
 
 # cleanup
-sleep 15
 umount $tmp/iso_org
 rm -rf $tmp/iso_new
 rm -rf $tmp/iso_org
