@@ -76,6 +76,9 @@ d-i partman-md/confirm_nooverwrite                          boolean     true
 d-i partman-md/device_remove_md                             boolean     true
 d-i partman-partitioning/confirm_write_new_label            boolean     true
 
+# The installer has detected that the following disks have mounted partitions
+d-i preseed/early_command string umount /media
+
 # GRUB configuration, disable splash and quiet to reduce error in graphics drivers of virtual machines
 d-i debian-installer/quiet                                  boolean     false
 d-i debian-installer/splash                                 boolean     false
