@@ -222,7 +222,7 @@ if $autostart ; then
 fi
 
 # set late command
-late_command="chroot /target wget -O /home/${username}/start.sh https://github.com/${seed_file}/ubuntu-unattended/raw/master/start.sh ;\
+late_command="chroot /target wget -O /home/${username}/start.sh https://github.com/${username}/ubuntu-unattended/raw/master/start.sh ;\
     chroot /target chmod +x /home/${username}/start.sh ;"
 
 # copy the seed file to the iso
