@@ -51,7 +51,7 @@ d-i apt-setup/services-select                               multiselect security
 d-i apt-setup/security_host                                 string      security.ubuntu.com
 d-i apt-setup/security_path                                 string      /ubuntu
 tasksel tasksel/first                                       multiselect Basic Ubuntu server
-d-i pkgsel/include                                          string      openssh-server ntp ntpstat ntpdate screen tmux
+d-i pkgsel/include                                          string      openssh-server wget ntp ntpstat ntpdate screen tmux
 d-i pkgsel/upgrade                                          select      none
 d-i pkgsel/update-policy                                    select      none
 d-i pkgsel/updatedb                                         boolean     true
