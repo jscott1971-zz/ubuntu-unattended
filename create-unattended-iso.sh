@@ -185,7 +185,7 @@ fi
 if [[ $bootable == "yes" ]] || [[ $bootable == "y" ]]; then
     if [ $(program_is_installed "isohybrid") -eq 0 ]; then
         #16.04
-        if [ $ub1604 == "yes" ]; then
+        if [[ $ub1604 == "yes" || $(lsb_release -cs) == "artful" ]]; then
 	    (apt-get -y install syslinux syslinux-utils > /dev/null 2>&1) &
             spinner $!
         else
@@ -218,12 +218,19 @@ echo en > $tmp/iso_new/isolinux/lang
 
 # set timeout to 1 decisecond to skip language & boot menu option selection.
 if $autostart ; then
-    sed -i "s/timeout 0/timeout 1/" $tmp/iso_new/isolinux/isolinux.cfg
+    sed -i "s/timeout 0/timeout 1/" $tmp/iso_new/isolinux/isolinux.cfg\
+    # taken from https://github.com/fries/prepare-ubuntu-unattended-install-iso/blob/master/make.sh
+    # sed -i -r 's/timeout\s+[0-9]+/timeout 1/g' $tmp/iso_new/isolinux/isolinux.cfg
 fi
 
 # set late command
-late_command="chroot /target wget -O /home/${username}/start.sh https://github.com/${username}/ubuntu-unattended/raw/master/start.sh ;\
-    chroot /target chmod +x /home/${username}/start.sh ;"
+if [[ $ub1604 == "yes" ]]; then
+   late_command="apt-install wget; in-target wget --no-check-certificate -O /home/$username/start.sh https://github.com/$username/ubuntu-unattended/raw/master/start.sh ;\
+     in-target chmod +x /home/$username/start.sh ;"
+else 
+   late_command="chroot /target wget -O /home/$username/start.sh https://github.com/$username/ubuntu-unattended/raw/master/start.sh ;\
+     chroot /target chmod +x /home/$username/start.sh ;"
+fi
 
 # copy the seed file to the iso
 cp -rT $tmp/$seed_file $tmp/iso_new/preseed/$seed_file
