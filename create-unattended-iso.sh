@@ -264,6 +264,7 @@ sed -i "/label install/ilabel autoinstall\n\
 echo " creating the remastered iso"
 cd $tmp/iso_new
 (mkisofs -D -r -V "Ubuntu unattended server" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $tmp/$new_iso_name . > /dev/null 2>&1) &
+
 sleep 15
 
 # make iso bootable (for dd'ing to  USB stick)
