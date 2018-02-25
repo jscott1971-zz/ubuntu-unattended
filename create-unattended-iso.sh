@@ -224,13 +224,8 @@ if $autostart ; then
 fi
 
 # set late command
-if [[ $ub1604 == "yes" ]]; then
-   late_command="apt-install wget; in-target wget --no-check-certificate -O /home/$username/start.sh https://github.com/$username/ubuntu-unattended/raw/master/start.sh ;\
-     in-target chmod +x /home/$username/start.sh ;"
-else 
-   late_command="chroot /target wget -O /home/$username/start.sh https://github.com/$username/ubuntu-unattended/raw/master/start.sh ;\
-     chroot /target chmod +x /home/$username/start.sh ;"
-fi
+late_command="apt-install wget; in-target wget --no-check-certificate -O /home/$username/start.sh https://github.com/$username/ubuntu-unattended/raw/master/start.sh ;\
+    in-target chmod +x /home/$username/start.sh ;"
 
 # copy the seed file to the iso
 cp -rT $tmp/$seed_file $tmp/iso_new/preseed/$seed_file
